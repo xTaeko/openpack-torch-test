@@ -456,7 +456,7 @@ class ResNet(nn.Module):
         self.feat3_att = se_block(filters[2])
         
         # Center
-        self.dblock = SpatialAttention()
+        self.dblock = DBlock(2048)
 
         # Decoder
         self.decoder4 = DecoderBlock(filters[3], filters[2])
