@@ -6,6 +6,8 @@ super_stream: atr-qags
 devices:
 - atr01
 - atr02
+- atr03
+- atr04
 acc: true
-gyro: false
-quat: false
+gyro: true
+quat: true
