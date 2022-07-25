@@ -137,9 +137,15 @@ class OpenPackImu(torch.utils.data.Dataset):
         self.index = tuple(index)
 
     def preprocessing(self) -> None:
-        """This method is called after ``load_dataset()`` and apply preprocessing to loaded data.
         """
-        logger.warning("No preprocessing is applied.")
+        * Normalize [-3G, +3G] into [0, 1].
+        """
+        # NOTE: Normalize ACC data. ([-3G, +3G] -> [0, 1])
+        for seq_dict in self.data:
+            x = seq_dict.get("data")
+            x = np.clip(x, -3, +3)
+            x = (x + 3.) / 6.
+            seq_dict["data"] = x
 
     @property
     def num_classes(self) -> int:
@@ -300,15 +306,13 @@ class OpenPackKeypoint(torch.utils.data.Dataset):
         self.index = tuple(index)
 
     def preprocessing(self):
-         """
-        * Normalize [-3G, +3G] into [0, 1].
+        """This method is called after ``load_dataset()`` method and apply preprocessing to loaded data.
+        Todo:
+            - [ ] sklearn.preprocessing.StandardScaler()
+            - [ ] DA (half_body_transform)
+                - https://github.com/open-mmlab/mmskeleton/blob/b4c076baa9e02e69b5876c49fa7c509866d902c7/mmskeleton/datasets/estimation.py#L62
         """
-        # NOTE: Normalize ACC data. ([-3G, +3G] -> [0, 1])
-        for seq_dict in self.data:
-            x = seq_dict.get("data")
-            x = np.clip(x, -3, +3)
-            x = (x + 3.) / 6.
-            seq_dict["data"] = x
+        logger.warning("No preprocessing is applied.")
 
     @ property
     def num_classes(self) -> int:
